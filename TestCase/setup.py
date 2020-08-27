@@ -39,11 +39,17 @@ def get_cookie(phone,pwd):
         ,data=dic)
     try:
         cookies = r.cookies.items()
-        cookie = ''
-        for name,value in cookies:
-            cookie += '{0}={1}'.format(name,value)
+        cookie = ';'.join(['{0}={1}'.format(name,value) for name,value in cookies])
         return cookie
     except Exception as err:
         print('获取cookie失败：\n{0}'.format(err))
 
+def get_token(phone,pwd):
+    headers = {
+        'Content-Type':'application/json',
+        'cookie':get_cookie(phone,pwd)
+    }
+    r = requests.post('https://cashiertest.senguo.me/api/user/gettoken',headers=headers)
+    # print(r.json()['data']['token'])
+    return r.json()['data']['token']
 
